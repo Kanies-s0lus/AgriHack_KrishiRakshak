@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Crop | KrishiRakshak</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">KrishiRakshak</div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('routes.dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('routes.logout') }}">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="login-container">
+        <h2>Add Crop</h2>
+        <form method="POST">
+            <input type="text" name="name" placeholder="Crop Name" required>
+            <input type="date" name="date_planted" required>
+            <input type="text" name="soil_type" placeholder="Soil Type" required>
+            <button type="submit">Add Crop</button>
+        </form>
+    </div>
+</body>
+</html>

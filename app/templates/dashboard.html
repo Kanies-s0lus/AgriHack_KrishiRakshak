@@ -10,14 +10,17 @@
     <nav class="navbar">
         <div class="logo">KrishiRakshak</div>
         <ul class="nav-links">
-            <li><a href="{{ url_for('routes.home') }}">Home</a></li>
             <li><a href="{{ url_for('routes.logout') }}">Logout</a></li>
         </ul>
     </nav>
 
-    <div class="login-container">
+    <div class="dashboard-header">
         <h2>Dashboard</h2>
-        <p>Work in progress...</p>
+        <a href="{{ url_for('routes.add_crop') }}" class="btn">+ Add Crops</a>
+    </div>
+
+    <div class="dashboard-content">
+        <!-- Future content: list of crops, stats, etc. -->
     </div>
 </body>
 </html>

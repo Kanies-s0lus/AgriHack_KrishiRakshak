@@ -2,3 +2,4 @@
 ./app/__pycache__
 ./instance
 instance/krishirakshak.db
+/app/__pycache__

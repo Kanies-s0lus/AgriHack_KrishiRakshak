@@ -142,3 +142,22 @@ button:hover {
     color: #0078ff;
     text-decoration: none;
 }
+
+/* Dashboard header layout */
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;  /* header to the left */
+    gap: 1rem;
+    padding: 1.5rem 2rem;
+    margin-top: 60px; /* offset for navbar */
+}
+
+.dashboard-header h2 {
+    margin: 0;
+}
+
+.dashboard-content {
+    padding: 0 2rem;
+    /* future styling for crops list */
+}

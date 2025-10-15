@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
-from flask_login import login_user, logout_user, login_required
-from app.models import User
+from flask_login import login_user, logout_user, login_required, current_user
+from app.models import User,Crop
 from app import db
+from datetime import datetime
 
 
 bp = Blueprint('routes', __name__,template_folder='template',static_folder='static')
@@ -23,9 +24,13 @@ def login():
             return redirect(url_for('routes.dashboard'))  #LOGGED IN 
         flash('Invalid username or password', 'danger')
     return render_template('login.html')
+
 @bp.route('/logout')
+@login_required
 def logout():
-    pass
+    logout_user()
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('routes.login'))
 
 
 @bp.route('/signup', methods=['GET', 'POST'])
@@ -54,3 +59,26 @@ def signup():
 def dashboard():
     return render_template('dashboard.html')
 
+@bp.route('/add_crop', methods=['GET', 'POST'])
+@login_required
+def add_crop():
+    if request.method == 'POST':
+        name = request.form['name']
+        date_str = request.form['date_planted']
+        soil_type = request.form['soil_type']
+
+        try:
+            date_planted = datetime.strptime(date_str, '%Y-%m-%d').date()
+            new_crop = Crop(
+                user_id = current_user.id,
+                name = name,
+                date_planted =date_planted,
+                soil_type=soil_type
+            )
+            db.session.add(new_crop)
+            db.session.commit()
+            flash('Crop added successfully!', 'success')
+            return redirect(url_for('routes.dashboard'))
+        except ValueError:
+            flash('Invalid date format. Use YYYY-MM-DD.', 'danger')
+    return render_template('add_crop.html')
