@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | KrishiRakshak</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">KrishiRakshak</div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('routes.home') }}">Home</a></li>
+            <li><a href="{{ url_for('routes.logout') }}">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="login-container">
+        <h2>Dashboard</h2>
+        <p>Work in progress...</p>
+    </div>
+</body>
+</html>
