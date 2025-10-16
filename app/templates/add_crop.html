@@ -20,7 +20,15 @@
         <form method="POST">
             <input type="text" name="name" placeholder="Crop Name" required>
             <input type="date" name="date_planted" required>
-            <input type="text" name="soil_type" placeholder="Soil Type" required>
+            <select name="soil_type" required>
+                <option value="" disabled selected>Select Soil Type</option>
+                <option value="Clay">Clay</option>
+                <option value="Loamy">Loamy</option>
+                <option value="Sandy">Sandy</option>
+                <option value="Silty">Silty</option>
+                <option value="Peaty">Peaty/Organic-rich</option>
+                <option value="Soft">Soft/Light</option>
+            </select>
             <button type="submit">Add Crop</button>
         </form>
     </div>

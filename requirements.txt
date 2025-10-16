@@ -2,3 +2,12 @@ flask
 flask_sqlalchemy
 flask_migrate
 flask_wtf
+asyncpg
+fastmcp
+httpx
+joblib
+anyio
+pandas
+scikit-learn == 1.6.1
+lightgbm
+python-dotenv

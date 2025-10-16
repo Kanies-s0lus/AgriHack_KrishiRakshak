@@ -3,8 +3,14 @@ from flask_login import login_user, logout_user, login_required, current_user
 from app.models import User,Crop
 from app import db
 from datetime import datetime
+from fastmcp import Client
+from fastmcp.client.transports import StreamableHttpTransport
 
 
+transport = StreamableHttpTransport("http://127.0.0.1:8000/mcp")
+
+# Create the client
+mcp_client = Client(name="CropDiseasePredictor", transport=transport)
 bp = Blueprint('routes', __name__,template_folder='template',static_folder='static')
 
 @bp.route('/')
@@ -65,18 +71,49 @@ def signup():
 
 @bp.route('/dashboard')
 @login_required
-def dashboard():
+async def dashboard():
     crops = Crop.query.filter_by(user_id=current_user.id).order_by(Crop.date_planted.desc()).all()
 
     crop_data = []
-    for crop in crops:
-        age_days = (datetime.utcnow().date() - crop.date_planted).days
-        crop_data.append({
-            'id': crop.id,
-            'name': crop.name,
-            'soil_type': crop.soil_type,
-            'age_days': age_days
-        })
+    async with mcp_client:
+        for crop in crops:
+            age_days = (datetime.utcnow().date() - crop.date_planted).days
+            result = await mcp_client.call_tool(
+                "get_crop_points",
+                { 
+                    "crop_name": crop.name, 
+                    "age_days": age_days, 
+                    "soil_type": crop.soil_type, 
+                    "lat": current_user.latitude, 
+                    "lon": current_user.longitude 
+                }
+            )
+
+             # Extract the text from the MCP result
+            raw_text = result.data if hasattr(result, "data") else str(result)
+            
+            # Split the returned info to separate disease, temp, humidity
+            lines = raw_text.split("\n")
+            disease_line = lines[0] if len(lines) > 0 else ""
+            temp_line = lines[1].split(",")[0] if len(lines) > 1 else ""
+            humidity_line = lines[1].split(",")[1] if len(lines) > 1 else ""
+            soil_line = f"🟫 Soil Type: {crop.soil_type}"
+
+            # Join all lines vertically with <br> for HTML
+            points_text = (
+                    f"<li>{disease_line}</li><br>"
+                    f"<li>{soil_line}</li>"
+                    f"<li>{temp_line}</li>"
+                    f"<li>{humidity_line}</li>"
+                )
+            
+            crop_data.append({
+                'id': crop.id,
+                'name': crop.name,
+                'soil_type': crop.soil_type,
+                'age_days': age_days,
+                'points' : points_text
+            })
 
     return render_template('dashboard.html', crops=crop_data)
 

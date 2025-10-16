@@ -32,8 +32,7 @@
                     </form>
                 </div>
                 <ul class="crop-details">
-                    <li>Soil Type: {{ crop.soil_type }}</li>
-                    <li><em>*Points to be added in the future*</em></li>
+                    <li>{{ crop.points|safe }}</li>
                 </ul>
             </li>
             {% endfor %}
