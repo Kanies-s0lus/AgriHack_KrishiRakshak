@@ -1,4 +1,3 @@
-To Setup Server:
     - Run in terminal:
         pip install -r requirements.txt
 
