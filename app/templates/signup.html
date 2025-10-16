@@ -20,10 +20,31 @@
         <form method="POST" action="/signup">
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>
-            <input type="password" name="password_confirm" placeholder="Retype Password" required>            
-            <button type="submit">Login</button>
+            <input type="password" name="password_confirm" placeholder="Retype Password" required> 
+            
+            <input type="hidden" name="latitude" id="latitude">
+            <input type="hidden" name="longitude" id="longitude">      
+
+            <button type="submit" id="signup-button" disabled>Signup</button>
         </form>
         <p class="signup-text">Already have an account? <a href="{{ url_for('routes.login') }}">Log In</a></p>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const signupButton = document.getElementById('signup-button');
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    document.getElementById('latitude').value = position.coords.latitude;
+                    document.getElementById('longitude').value = position.coords.longitude;
+                    signupButton.disabled = false; // enable submit once location is available
+                }, (error) => {
+                    alert('Field location is required. Please allow location access.');
+                });
+            } else {
+                alert('Geolocation not supported by browser. Field location is required.');
+            }
+        });
+    </script>
 </body>
 </html>

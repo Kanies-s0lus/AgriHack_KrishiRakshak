@@ -20,7 +20,42 @@
     </div>
 
     <div class="dashboard-content">
-        <!-- Future content: list of crops, stats, etc. -->
+        {% if crops %}
+        <ul class="crop-list">
+            {% for crop in crops %}
+            <li class="crop-item">
+                <div class="crop-header">
+                    <strong>{{ crop.name }}</strong>
+                    <span class="crop-age">[Age: {{ crop.age_days }} days]</span>
+                    <form method="POST" action="{{ url_for('routes.delete_crop', crop_id=crop.id) }}" onsubmit="return confirm('Are you sure you want to delete this crop?');">
+                        <button type="submit" class="btn-delete">×</button>
+                    </form>
+                </div>
+                <ul class="crop-details">
+                    <li>Soil Type: {{ crop.soil_type }}</li>
+                    <li><em>*Points to be added in the future*</em></li>
+                </ul>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <p>No crops added yet. Click +Add Crops to start!</p>
+        {% endif %}
     </div>
+    <script>
+        window.addEventListener('load', () => {
+        const cards = document.querySelectorAll('.crop-item');
+        let maxWidth = 0;
+
+        cards.forEach(card => {
+            const cardWidth = card.offsetWidth;
+            if (cardWidth > maxWidth) maxWidth = cardWidth;
+        });
+
+        cards.forEach(card => {
+            card.style.width = maxWidth + 'px';
+        });
+        });
+    </script>
 </body>
 </html>

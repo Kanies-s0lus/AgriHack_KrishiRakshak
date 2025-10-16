@@ -155,9 +155,75 @@ button:hover {
 
 .dashboard-header h2 {
     margin: 0;
+    padding: 0 2rem;
 }
 
-.dashboard-content {
-    padding: 0 2rem;
-    /* future styling for crops list */
+.crop-list {
+    display: flex;
+    flex-direction: column; /* stack vertically */
+    align-items: flex-start; /* align to the left */
+    gap: 1.5rem;
+    padding: 1.5rem;
+
+}
+
+.crop-list li{
+    list-style-type: none;
+}
+
+.crop-item {
+    position: relative;
+    flex: 1 1 45%;             /* take up about 45% of available width */
+    min-width: 320px;          /* don't shrink smaller than this */
+    max-width: 500px;          /* optional: limit how wide one card can get */
+    background: #f9f9f9;
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.crop-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+.crop-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.crop-header strong {
+    font-size: 1.2rem;
+}
+
+.crop-age {
+    margin-left: 1rem;
+    color: #777;
+    font-size: 0.9rem;
+}
+
+.crop-details {
+    margin-top: 0.5rem;
+    list-style-type: disc;
+    margin-left: 1.5rem;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.btn-delete {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    color: #ff4d4d;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.btn-delete:hover {
+    color: #d60000;
 }

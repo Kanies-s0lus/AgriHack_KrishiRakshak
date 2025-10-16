@@ -39,13 +39,22 @@ def signup():
         username = request.form['username']
         password = request.form['password']
         retype_password = request.form['password_confirm']
+        latitude = request.form.get('latitude')
+        longitude = request.form.get('longitude')
 
+        if not latitude or not longitude:
+            flash('Field location is required.', 'danger')
+            return render_template('signup.html')
         if password != retype_password:
             flash('Passwords do not match', 'danger')
         elif User.query.filter_by(username=username).first():
             flash('Username already exists', 'danger')
         else:
-            new_user = User(username=username)
+            new_user = User(
+                username=username,
+                latitude=float(latitude),
+                longitude=float(longitude)
+                )
             new_user.set_password(password)
             db.session.add(new_user)
             db.session.commit()
@@ -57,7 +66,19 @@ def signup():
 @bp.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
+    crops = Crop.query.filter_by(user_id=current_user.id).order_by(Crop.date_planted.desc()).all()
+
+    crop_data = []
+    for crop in crops:
+        age_days = (datetime.utcnow().date() - crop.date_planted).days
+        crop_data.append({
+            'id': crop.id,
+            'name': crop.name,
+            'soil_type': crop.soil_type,
+            'age_days': age_days
+        })
+
+    return render_template('dashboard.html', crops=crop_data)
 
 @bp.route('/add_crop', methods=['GET', 'POST'])
 @login_required
@@ -82,3 +103,16 @@ def add_crop():
         except ValueError:
             flash('Invalid date format. Use YYYY-MM-DD.', 'danger')
     return render_template('add_crop.html')
+
+@bp.route('/delete_crop/<int:crop_id>', methods=['POST'])
+@login_required
+def delete_crop(crop_id):
+    crop = Crop.query.get_or_404(crop_id)
+    if crop.user_id != current_user.id:
+        flash('You cannot delete this crop.', 'danger')
+        return redirect(url_for('routes.dashboard'))
+
+    db.session.delete(crop)
+    db.session.commit()
+    flash('Crop deleted successfully!', 'success')
+    return redirect(url_for('routes.dashboard'))
